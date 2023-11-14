@@ -1,6 +1,7 @@
 """Script with auxiliary functions for plotting."""
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -9,10 +10,12 @@ from datamole_airpressure.common.metrics import individual_auc
 
 def visualise_feature(data, col, target_col):
     """Print separated distributions of the feature according the target."""
-    sns.displot(data=data, x=col, hue=target_col, kind='kde', common_norm=False, fill=True, height=5, aspect=1.5)
+    subset = data[((data[col].notnull()) & (data[target_col].notnull()))]
+    sns.displot(data=subset, x=col, hue=target_col, kind='kde', common_norm=False, fill=True, height=5, aspect=1.5)
+    plt.xlim(np.quantile(subset[col], 0.01), np.quantile(subset[col], 0.99))
     plt.show()
-    auc = individual_auc(data, col, target_col)
-    print(f'Individual AUC performance of the feature: {auc} ')
+    auc = individual_auc(subset, col, target_col)
+    print(auc)
 
 
 def show_series(data: pd.DataFrame, labels: pd.DataFrame, machine_id: str, measurement_id: int):

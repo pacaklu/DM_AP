@@ -76,7 +76,7 @@ class LGBMModel:
             predictions += _model.predict(test_data) / len(models)
         return predictions
 
-    def _comp_var_imp(self, models: List[lgb.Booster], preds: List[str]) -> pd.DataFrame:
+    def comp_var_imp(self, models: List[lgb.Booster], preds: List[str]) -> pd.DataFrame:
         """Compute variable importance of features."""
         importance_df = pd.DataFrame()
         importance_df["Feature"] = preds
@@ -91,7 +91,7 @@ class LGBMModel:
 
     def plot_importance(self, models: List[lgb.Booster], preds: List[str]):
         """Plot variable importances."""
-        dataframe = self._comp_var_imp(models, preds)
+        dataframe = self.comp_var_imp(models, preds)
         plt.figure(figsize=(20, len(preds) / 2))
         sns.barplot(
             x="Importance_gain",
